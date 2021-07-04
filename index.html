@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/font-awesome/5.13.0/css/all.css" rel="stylesheet">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 30px;
+        }
+        
+        .title {
+            text-align: center;
+        }
+        
+        button,
+        button i {
+            position: fixed;
+            bottom: 80px;
+            right: 100px;
+            font-size: 50px;
+            color: rgb(230, 97, 45);
+            outline: none;
+        }
+        
+        button i:hover {
+            color: cornflowerblue;
+        }
+        
+        button i:active {
+            color: rgb(247, 209, 39);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title">
+        <h1 id="title">支持word，excel,ppt,pdf等文档类型</h1>
+    </div>
+    <input type="file" id="fileInput" hidden>
+    <button id="uploadBtn"><i class="fas fa-upload"  ></i></button>
+</body>
+<script>
+    let fileInput = document.getElementById('fileInput');
+    let uploadBtn = document.getElementById('uploadBtn');
+    let title = document.querySelector('.title');
+
+
+    function renderIframe(url) {
+        let iframe = document.createElement('iframe');
+        iframe.setAttribute('src', url); //建立属性
+        iframe.style.width = "90vw";
+        iframe.style.height = "90vh";
+        document.body.removeChild(title);
+        document.body.appendChild(iframe);
+    }
+
+    //请求API
+    function renderDom(data) {
+        let formdata = new FormData();
+        formdata.append('_xdoc', data); //append往后面 shift往前面
+
+        fetch('https://view.xdocin.com/xdoc', {
+            method: 'post',
+            body: formdata
+        }).then((result) => {
+            console.log(result);
+            renderIframe(result.url)
+        })
+    }
+
+    //监听上传按钮--通过点击上传按钮触发文件上传按钮
+    uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+    })
+
+    //监听上传文件的变化
+    fileInput.addEventListener('change', (event) => {
+        let file = event.target.files[0]; //只取第一个双击的文件
+        // console.log(file);
+        let reader = new FileReader(); //实例化filereader，读取文件
+        reader.readAsDataURL(file); //以dataurl的方式读取文件
+        reader.onload = (event) => {
+            let data = event.target.result;
+            renderDom(data);
+            // console.log(data);
+        }
+    });
+</script>
+
+</html>
