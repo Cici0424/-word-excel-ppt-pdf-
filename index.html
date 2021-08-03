@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://cdn.bootcss.com/font-awesome/5.13.0/css/all.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.3/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         * {
             padding: 0;
@@ -18,41 +20,648 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            margin-top: 30px;
+            margin-top: 25px;
+        }
+        
+        #range-wrap {
+            position: fixed;
+            top: 50%;
+            right: 30px;
+            width: 30px;
+            height: 150px;
+            margin-top: -75px;
+        }
+        
+        #range-wrap input {
+            transform: rotate(-90deg);
+            width: 150px;
+            height: 20px;
+            margin: 0;
+            transform-origin: 75px 75px;
+            border-radius: 15px;
+            -webkit-appearance: none;
+            outline: none;
+            position: relative;
+        }
+        
+        #range-wrap input::after {
+            display: block;
+            content: "";
+            width: 0;
+            height: 0;
+            border: 5px solid transparent;
+            border-right: 150px solid #00CCFF;
+            border-left-width: 0;
+            position: absolute;
+            left: 0;
+            top: 5px;
+            border-radius: 15px;
+            z-index: 0;
+        }
+        
+        #range-wrap input[type=range]::-webkit-slider-thumb,
+        #range-wrap input[type=range]::-moz-range-thumb {
+            -webkit-appearance: none;
+        }
+        
+        #range-wrap input[type=range]::-webkit-slider-runnable-track,
+        #range-wrap input[type=range]::-moz-range-track {
+            height: 10px;
+            border-radius: 10px;
+            box-shadow: none;
+        }
+        
+        #range-wrap input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            margin-top: -1px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00CCFF;
+            position: relative;
+            z-index: 999;
+        }
+        /* 手机端 */
+        
+        @media screen and (max-width: 768px) {
+            .tools {
+                bottom: auto;
+                top: 20px;
+            }
+            .tools button {
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                margin-bottom: 15px;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            }
+            .tools button.active,
+            .tools button:active {
+                box-shadow: 0 0 5px #00CCFF;
+            }
+            .tools button i {
+                font-size: 18px;
+            }
+            .tools #swatches {
+                display: none
+            }
+            .color-group {
+                left: 0;
+                top: auto;
+                bottom: 20px;
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+                transform: translate(0, 0)
+            }
+            .color-group ul li {
+                display: inline-block;
+                margin: 0 5px;
+            }
+            .color-group ul li.active {
+                box-shadow: 0 0 10px #00CCFF;
+            }
+            #range-wrap {
+                right: auto;
+                left: 20px;
+            }
         }
         
         .title {
             text-align: center;
+            font-size: 15px;
+            word-spacing: 5px;
+            letter-spacing: 2px;
         }
         
         button {
             font-size: 50px;
-            color: rgb(230, 97, 45);
+            color: rgb(58, 124, 247);
             outline: none;
-            border: 1px solid transparent;
+            border: 2px solid rgb(58, 124, 247);
             position: fixed;
-            bottom: 80px;
-            right: 100px;
+            bottom: 50px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            text-align: center;
+            line-height: 88px;
         }
         
         button i:hover {
-            color: cornflowerblue;
+            color: rgb(253, 123, 36);
         }
         
         button i:active {
-            color: rgb(247, 209, 39);
+            color: rgb(6, 155, 6);
+        }
+        /* 画板部分 */
+        
+        #drawing-board {
+            top: 10px;
+            left: 70px;
+            width: 88vw;
+            height: 90vh;
+            background: transparent;
+            position: fixed;
+            display: block;
+            cursor: crosshair;
+            z-index: 0;
+        }
+        
+        .tools button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 27px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid #eee;
+            outline: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            margin: 0 20px;
+            text-align: center;
+            color: #ccc;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            z-index: 200;
+        }
+        
+        .tools button i {
+            font-size: 27px;
+        }
+        
+        #eraser,
+        #brush,
+        #clear,
+        #undo,
+        #save {
+            bottom: 15px;
+            position: fixed;
+            z-index: 300;
+        }
+        
+        #brush {
+            right: 900px;
+        }
+        
+        #eraser {
+            right: 800px;
+        }
+        
+        #clear {
+            right: 700px;
+        }
+        
+        #undo {
+            right: 600px;
+        }
+        
+        #save {
+            right: 500px;
+        }
+        
+        .tools button.active,
+        .tools button:active {
+            box-shadow: 0 0 10px #00CCFF;
+            color: #00CCFF;
+        }
+        
+        .color-group {
+            position: fixed;
+            width: 30px;
+            left: 26px;
+            top: 50%;
+            transform: translate(0, -150px)
+        }
+        
+        .color-group ul {
+            list-style: none;
+        }
+        
+        .color-group ul li {
+            width: 35px;
+            height: 35px;
+            margin: 10px 0;
+            border-radius: 50%;
+            box-sizing: border-box;
+            border: 3px solid white;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .color-group ul li.active {
+            box-shadow: 0 0 15px #00CCFF;
+        }
+        
+        #range-wrap {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            width: 30px;
+            height: 150px;
+            margin-top: -75px;
+        }
+        
+        #range-wrap input {
+            transform: rotate(-90deg);
+            width: 150px;
+            height: 20px;
+            margin: 0;
+            transform-origin: 75px 75px;
+            border-radius: 15px;
+            -webkit-appearance: none;
+            outline: none;
+            position: relative;
+        }
+        
+        #range-wrap input::after {
+            display: block;
+            content: "";
+            width: 0;
+            height: 0;
+            border: 5px solid transparent;
+            border-right: 150px solid #00CCFF;
+            border-left-width: 0;
+            position: absolute;
+            left: 0;
+            top: 5px;
+            border-radius: 15px;
+            z-index: 0;
+        }
+        
+        #range-wrap input[type=range]::-webkit-slider-thumb,
+        #range-wrap input[type=range]::-moz-range-thumb {
+            -webkit-appearance: none;
+        }
+        
+        #range-wrap input[type=range]::-webkit-slider-runnable-track,
+        #range-wrap input[type=range]::-moz-range-track {
+            height: 10px;
+            border-radius: 10px;
+            box-shadow: none;
+        }
+        
+        #range-wrap input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            margin-top: -1px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00CCFF;
+            position: relative;
+            z-index: 999;
+        }
+        /* 手机端适配 */
+        
+        @media screen and (max-width: 800px) {
+            title {
+                font-size: 18px;
+            }
+            .tools {
+                bottom: auto;
+                top: 20px;
+            }
+            .tools button {
+                width: 35px;
+                height: 35px;
+                line-height: 35px;
+                margin-bottom: 15px;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            }
+            .tools button.active,
+            .tools button:active {
+                box-shadow: 0 0 5px #00CCFF;
+            }
+            .tools button i {
+                font-size: 18px;
+            }
+            .tools #swatches {
+                display: none
+            }
+            .color-group {
+                position: fixed;
+                width: 20px;
+                height: 20px;
+                left: 26px;
+                top: 69%;
+                transform: translate(0, -150px)
+            }
+            .color-group ul li {
+                display: inline-block;
+                margin: 5px 5px;
+                width: 25px;
+                height: 25px;
+            }
+            .color-group ul li.active {
+                box-shadow: 0 0 10px #00CCFF;
+            }
+            #range-wrap {
+                position: fixed;
+                top: 27%;
+                right: 20px;
+                width: 30px;
+            }
+            .tools button {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                line-height: 9px;
+            }
+            .tools button i {
+                font-size: 20px;
+            }
+            #eraser,
+            #brush,
+            #clear,
+            #undo,
+            #save {
+                right: 10px;
+                position: fixed;
+                z-index: 300;
+            }
+            #brush {
+                top: 250px;
+            }
+            #eraser {
+                top: 300px;
+            }
+            #clear {
+                top: 350px;
+            }
+            #undo {
+                top: 400px;
+            }
+            #save {
+                top: 450px;
+            }
+            button {
+                font-size: 33px;
+                color: rgb(58, 124, 247);
+                outline: none;
+                border: 2px solid rgb(58, 124, 247);
+                position: fixed;
+                bottom: 50px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                text-align: center;
+                line-height: 30px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <canvas id="drawing-board"></canvas>
     <div class="title">
-        <h1 id="title">支持word，excel,ppt,pdf等文档类型</h1>
+        <h1 id="title">支持word,excel,ppt,pdf等文档类型</h1>
     </div>
     <input type="file" id="fileInput" hidden>
-    <button id="uploadBtn"><i class="fas fa-upload"  ></i></button>
+    <button id="uploadBtn"><i class="fas fa-paper-plane"  ></i></button>
+    <div class="color-group">
+        <ul>
+            <li id="white" class="color-item" style="background-color: white;"></li>
+            <li id="black" class="color-item active" style="background-color: black;"></li>
+            <li id="red" class="color-item" style="background-color: #FF3333;"></li>
+            <li id="blue" class="color-item" style="background-color: #0066FF;"></li>
+            <li id="yellow" class="color-item" style="background-color: #FFFF33;"></li>
+            <li id="green" class="color-item" style="background-color: #33CC66;"></li>
+            <li id="gray" class="color-item" style="background-color: gray;"></li>
+        </ul>
+    </div>
+    <div id="range-wrap"><input type="range" id="range" min="1" max="30" value="5" title="调整笔刷粗细"></div>
+    <div class="tools">
+        <button id="brush" class="active" title="画笔"><i class="fas fa-pencil-alt"></i></button>
+        <button id="eraser" title="橡皮擦"><i class="fas fa-eraser"></i></button>
+        <button id="clear" title="清空"><i class="far fa-trash-alt"></i></button>
+        <button id="undo" title="撤销"><i class="fas fa-undo"></i></button>
+        <button id="save" title="保存"><i class="far fa-save"></i></button>
+    </div>
+
 </body>
 <script>
+    // // 画板部分
+    let canvas = document.getElementById("drawing-board");
+    let ctx = canvas.getContext("2d");
+    let eraser = document.getElementById("eraser");
+    let brush = document.getElementById("brush");
+    let reSetCanvas = document.getElementById("clear");
+    let aColorBtn = document.getElementsByClassName("color-item");
+    let save = document.getElementById("save");
+    let undo = document.getElementById("undo");
+    let range = document.getElementById("range");
+    let clear = false;
+    let activeColor = 'black';
+    let lWidth = 4;
+    autoSetSize(canvas);
+
+    setCanvasBg('white');
+
+    listenToUser(canvas);
+
+    getColor();
+
+    window.onbeforeunload = function() {
+        return "Reload site?";
+    };
+
+    function autoSetSize(canvas) {
+        canvasSetSize();
+
+        function canvasSetSize() {
+            let pageWidth = document.documentElement.clientWidth;
+            let pageHeight = document.documentElement.clientHeight;
+
+            canvas.width = pageWidth;
+            canvas.height = pageHeight;
+        }
+
+        window.onresize = function() {
+            canvasSetSize();
+        }
+    }
+
+    function setCanvasBg(color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "black";
+    }
+
+    function listenToUser(canvas) {
+        let painting = false;
+        let lastPoint = {
+            x: undefined,
+            y: undefined
+        };
+
+        if (document.body.ontouchstart !== undefined) {
+            canvas.ontouchstart = function(e) {
+                this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height); //在这里储存绘图表面
+                saveData(this.firstDot);
+                painting = true;
+                let x = e.touches[0].clientX;
+                let y = e.touches[0].clientY;
+                lastPoint = {
+                    "x": x,
+                    "y": y
+                };
+                ctx.save();
+                drawCircle(x, y, 0);
+            };
+            canvas.ontouchmove = function(e) {
+                if (painting) {
+                    let x = e.touches[0].clientX;
+                    let y = e.touches[0].clientY;
+                    let newPoint = {
+                        "x": x,
+                        "y": y
+                    };
+                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y);
+                    lastPoint = newPoint;
+                }
+            };
+
+            canvas.ontouchend = function() {
+                painting = false;
+            }
+        } else {
+            canvas.onmousedown = function(e) {
+                this.firstDot = ctx.getImageData(0, 0, canvas.width, canvas.height); //在这里储存绘图表面
+                saveData(this.firstDot);
+                painting = true;
+                let x = e.clientX;
+                let y = e.clientY;
+                lastPoint = {
+                    "x": x,
+                    "y": y
+                };
+                ctx.save();
+                drawCircle(x, y, 0);
+            };
+            canvas.onmousemove = function(e) {
+                if (painting) {
+                    let x = e.clientX;
+                    let y = e.clientY;
+                    let newPoint = {
+                        "x": x,
+                        "y": y
+                    };
+                    drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y, clear);
+                    lastPoint = newPoint;
+                }
+            };
+
+            canvas.onmouseup = function() {
+                painting = false;
+            };
+
+            canvas.mouseleave = function() {
+                painting = false;
+            }
+        }
+    }
+
+    function drawCircle(x, y, radius) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        if (clear) {
+            ctx.clip();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
+    }
+
+    function drawLine(x1, y1, x2, y2) {
+        ctx.lineWidth = lWidth;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        if (clear) {
+            ctx.save();
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.closePath();
+            ctx.clip();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        } else {
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.closePath();
+        }
+    }
+
+    range.onchange = function() {
+        lWidth = this.value;
+    };
+
+    eraser.onclick = function() {
+        clear = true;
+        this.classList.add("active");
+        brush.classList.remove("active");
+    };
+
+    brush.onclick = function() {
+        clear = false;
+        this.classList.add("active");
+        eraser.classList.remove("active");
+    };
+
+    reSetCanvas.onclick = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        setCanvasBg('white');
+    };
+
+    save.onclick = function() {
+        let imgUrl = canvas.toDataURL("image/png");
+        let saveA = document.createElement("a");
+        document.body.appendChild(saveA);
+        saveA.href = imgUrl;
+        saveA.download = "zspic" + (new Date).getTime();
+        saveA.target = "_blank";
+        saveA.click();
+    };
+
+    function getColor() {
+        for (let i = 0; i < aColorBtn.length; i++) {
+            aColorBtn[i].onclick = function() {
+                for (let i = 0; i < aColorBtn.length; i++) {
+                    aColorBtn[i].classList.remove("active");
+                    this.classList.add("active");
+                    activeColor = this.style.backgroundColor;
+                    ctx.fillStyle = activeColor;
+                    ctx.strokeStyle = activeColor;
+                }
+            }
+        }
+    }
+
+    let historyDeta = [];
+
+    function saveData(data) {
+        (historyDeta.length === 10) && (historyDeta.shift()); // 上限为储存10步，太多了怕挂掉
+        historyDeta.push(data);
+    }
+
+    undo.onclick = function() {
+        if (historyDeta.length < 1) return false;
+        ctx.putImageData(historyDeta[historyDeta.length - 1], 0, 0);
+        historyDeta.pop()
+    };
+    // // 画板部分结束
+
+
     let fileInput = document.getElementById('fileInput');
     let uploadBtn = document.getElementById('uploadBtn');
     let title = document.querySelector('.title');
@@ -62,7 +671,7 @@
         let iframe = document.createElement('iframe');
         iframe.setAttribute('src', url); //建立属性
         iframe.style.width = "90vw";
-        iframe.style.height = "90vh";
+        iframe.style.height = "86vh";
         title.style.display = 'none';
         document.body.appendChild(iframe);
     }
